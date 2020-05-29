@@ -81,8 +81,6 @@ async function getFileList (assets) {
   });
 }
 
-// getFileList('./*.json; ./src/indexaaa.js').then(console.log.bind(console))
-
 export async function run() {
   try {
     // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
@@ -106,8 +104,7 @@ export async function run() {
           ...(list[i])
         });
       } catch (err) {
-        console.log(err);
-        if (err.resource === 'ReleaseAsset' && err.code === 'already_exists' && err.field === 'name') {
+        if (err.errors.length === 1 && err.errors[0].resource === 'ReleaseAsset' && err.errors[0].code === 'already_exists' && err.errors[0].field === 'name') {
           if (exists[list[i].name] === undefined) {
             exists[list[i].name] = 0;
           }
@@ -122,7 +119,6 @@ export async function run() {
         }
       }
 
-      console.log(uploadAssetResponse);
       const url = (uploadAssetResponse && uploadAssetResponse.data && uploadAssetResponse.data.browser_download_url) || '';
       if (url) {
         browserDownloadUrl.push(url);
