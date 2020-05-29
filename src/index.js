@@ -97,12 +97,32 @@ export async function run() {
     if (list.length === 0) return;
 
     const browserDownloadUrl = [];
+    const exists = Object.create(null);
     for (let i = 0; i < list.length; i++) {
-      const uploadAssetResponse = await github.repos.uploadReleaseAsset({
-        url: uploadUrl,
-        ...(list[i])
-      });
+      let uploadAssetResponse;
+      try {
+        uploadAssetResponse = await github.repos.uploadReleaseAsset({
+          url: uploadUrl,
+          ...(list[i])
+        });
+      } catch (err) {
+        console.log(err);
+        if (err.resource === 'ReleaseAsset' && err.code === 'already_exists' && err.field === 'name') {
+          if (exists[list[i].name] === undefined) {
+            exists[list[i].name] = 0;
+          }
+          exists[list[i].name]++;
+          list[i].name = `${list[i].name} (${exists[list[i].name]})`;
+          uploadAssetResponse = await github.repos.uploadReleaseAsset({
+            url: uploadUrl,
+            ...(list[i])
+          });
+        } else {
+          throw err;
+        }
+      }
 
+      console.log(uploadAssetResponse);
       const url = (uploadAssetResponse && uploadAssetResponse.data && uploadAssetResponse.data.browser_download_url) || '';
       if (url) {
         browserDownloadUrl.push(url);
@@ -110,7 +130,7 @@ export async function run() {
     }
 
     // Set the output variable for use by other actions: https://github.com/actions/toolkit/tree/master/packages/core#inputsoutputs
-    core.setOutput('browser_download_urls', browserDownloadUrl.join(';'));
+    core.setOutput('browser_download_urls', Array.from(new Set(browserDownloadUrl)).join(';'));
   } catch (error) {
     core.setFailed(error.message);
   }
