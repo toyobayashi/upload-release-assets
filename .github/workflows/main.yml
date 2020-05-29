@@ -30,9 +30,6 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
-    - name: Show GITHUB_WORKSPACE
-      run: echo $GITHUB_WORKSPACE
-
     - uses: actions/checkout@v2
 
     - name: Windows build
@@ -64,6 +61,7 @@ jobs:
         # upload_url: ${{ needs.draft.outputs.upload_url }}
         tag_name: ${{ github.event.after }}
         release_name: ${{ github.event.after }}
+        body: hello
         draft: true
         prerelease: false
-        assets: ./out/*.txt; ./dist/main.js; ./not/exists
+        # assets: ./out/*.txt; ./dist/main.js; ./not/exists

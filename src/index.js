@@ -13,12 +13,7 @@ export async function run() {
       prerelease: core.getInput('prerelease', { required: false }) === 'true'
     });
 
-    console.log('releaseInfo:');
-    console.log(releaseInfo);
-
     const browserDownloadUrls = await upload(releaseInfo.upload_url, core.getInput('assets', { required: false }));
-    console.log('browserDownloadUrls:');
-    console.log(browserDownloadUrls);
 
     const outputs = {
       id: releaseInfo.id,
@@ -26,7 +21,6 @@ export async function run() {
       upload_url: releaseInfo.upload_url,
       browser_download_urls: browserDownloadUrls.join(';')
     };
-    console.log(outputs);
 
     Object.keys(outputs).forEach(k => {
       core.setOutput(k, outputs[k]);

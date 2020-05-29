@@ -6,24 +6,10 @@ import { github, context } from './core.js';
  * @returns {{ id: number; html_url: string; upload_url: string }}
  */
 export async function getReleaseInfo (options) {
-  console.log('getReleaseInfo options:');
-  console.log(options);
-
   const { owner, repo } = context.repo;
   const releases = await github.repos.listReleases({
     owner, repo
   });
-
-  try {
-    const testrelease = await github.repos.getReleaseByTag({
-      owner, repo, tag: '3575'
-    });
-    console.log('testrelease:');
-    console.log(testrelease);
-  } catch (err) {
-    console.log('getReleaseByTag err');
-    console.log(err);
-  }
 
   const tagName = options.tag_name;
   const tag = tagName.replace('refs/tags/', '');

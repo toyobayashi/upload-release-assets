@@ -1,27 +1,12 @@
 ``` yml
 name: Test
 
-on: push
+on:
+  push:
+    tags:
+    - '*'
 
 jobs:
-  draft:
-    name: Draft
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-    - name: Create Release Draft
-      # if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        draft: true
-        prerelease: false
-
   build:
     name: Build
     needs: draft
@@ -32,9 +17,6 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
-    - name: Show GITHUB_WORKSPACE
-      run: echo $GITHUB_WORKSPACE
-
     - uses: actions/checkout@v2
 
     - name: Windows build
@@ -42,7 +24,7 @@ jobs:
       shell: cmd
       run: |
         mkdir .\out
-        echo "win32">.\out\win32.txt
+        echo win32>.\out\win32.txt
 
     - name: Linux build
       if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -64,6 +46,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.draft.outputs.upload_url }} 
+        tag_name: ${{ github.event.after }} # required
+        release_name: ${{ github.event.after }} # required
+        # target_commitish: ''
+        # body: ''
+        draft: true
+        prerelease: false
         assets: ./out/*.txt; ./dist/main.js; ./not/exists
 ```
