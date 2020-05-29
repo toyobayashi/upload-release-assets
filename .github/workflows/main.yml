@@ -40,7 +40,7 @@ jobs:
       shell: cmd
       run: |
         mkdir .\out
-        echo "win32">.\out\win32.txt
+        echo win32>.\out\win32.txt
 
     - name: Linux build
       if: ${{ matrix.os == 'ubuntu-latest' }}
