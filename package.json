@@ -1,0 +1,29 @@
+{
+  "name": "@tybys/upload-release-assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Upload release assets to an existing GitHub Release",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "ty build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toyobayashi/upload-release-assets"
+  },
+  "keywords": [
+    "actions",
+    "node"
+  ],
+  "author": "toyobayashi",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.0.0",
+    "@actions/github": "^1.0.0",
+    "glob": "^7.1.6",
+    "mime": "^2.4.6"
+  },
+  "devDependencies": {
+    "@tybys/ty": "^0.9.3"
+  }
+}

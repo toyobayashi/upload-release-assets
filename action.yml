@@ -1,0 +1,19 @@
+name: 'Upload Release Assets'
+description: 'Upload release assets to an existing release in your repository'
+author: 'toyobayashi'
+inputs:
+  upload_url:
+    description: 'The URL for uploading assets to the release'
+    required: true
+  assets:
+    description: 'The paths to the asset you want to upload'
+    required: true
+outputs:
+  browser_download_urls:
+    description: 'The URL users can navigate to in order to download the uploaded asset'
+runs:
+  using: 'node12'
+  main: 'dist/main.js'
+branding:
+  icon: 'package'
+  color: 'gray-dark'
