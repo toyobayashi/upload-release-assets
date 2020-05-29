@@ -54,7 +54,7 @@ jobs:
       shell: bash
       run: |
         mkdir -p ./out
-        echo "linux" > ./out/linux.txt
+        echo "darwin" > ./out/darwin.txt
     
     - name: Test upload
       uses: toyobayashi/upload-release-assets@master

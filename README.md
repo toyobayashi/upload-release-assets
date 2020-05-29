@@ -56,7 +56,7 @@ jobs:
       shell: bash
       run: |
         mkdir -p ./out
-        echo "linux" > ./out/linux.txt
+        echo "darwin" > ./out/darwin.txt
     
     - name: Test upload
       # if: ${{ startsWith(github.event.ref, 'refs/tags') }}

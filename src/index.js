@@ -71,10 +71,10 @@ async function getFileList (assets) {
 
     const headers = { 'content-type': assetContentType, 'content-length': assetContentLength };
     const assetName = path.basename(p);
-    const file = fs.readFileSync(p);
+    const data = fs.readFileSync(p);
 
     return {
-      file,
+      data,
       headers,
       name: assetName
     };
