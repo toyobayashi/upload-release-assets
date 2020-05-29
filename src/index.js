@@ -40,7 +40,7 @@ function isGlob (str) {
   return false;
 }
 
-async function getFileList (assets) {
+async function getFileList (assets, url) {
   if (!assets) {
     return [];
   }
@@ -76,7 +76,9 @@ async function getFileList (assets) {
     return {
       data,
       headers,
-      name: assetName
+      name: assetName,
+      path: p,
+      url 
     };
   });
 }
@@ -86,38 +88,45 @@ export async function run() {
     // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
     const github = new GitHub(process.env['GITHUB_TOKEN']);
 
-    // Get the inputs from the workflow file: https://github.com/actions/toolkit/tree/master/packages/core#inputsoutputs
-    const uploadUrl = core.getInput('upload_url', { required: true });
-    const assetPath = core.getInput('assets', { required: true });
-
-    const list = await getFileList(assetPath);
-
-    if (list.length === 0) return;
-
-    const browserDownloadUrl = [];
     const exists = Object.create(null);
-    for (let i = 0; i < list.length; i++) {
+
+    async function uploadAsset (options) {
       let uploadAssetResponse;
       try {
         uploadAssetResponse = await github.repos.uploadReleaseAsset({
-          url: uploadUrl,
-          ...(list[i])
+          data: options.data,
+          headers: options.headers,
+          name: options.name,
+          url: options.url
         });
       } catch (err) {
         if (err.errors.length === 1 && err.errors[0].resource === 'ReleaseAsset' && err.errors[0].code === 'already_exists' && err.errors[0].field === 'name') {
-          if (exists[list[i].name] === undefined) {
-            exists[list[i].name] = 0;
+          if (exists[options.path] === undefined) {
+            exists[options.path] = 0;
           }
-          exists[list[i].name]++;
-          list[i].name = `${list[i].name} (${exists[list[i].name]})`;
-          uploadAssetResponse = await github.repos.uploadReleaseAsset({
-            url: uploadUrl,
-            ...(list[i])
-          });
+          exists[options.path]++;
+          options.name = `${options.name} (${exists[options.path]})`
+          uploadAssetResponse = await uploadAsset(options);
         } else {
           throw err;
         }
       }
+
+      return uploadAssetResponse;
+    }
+
+    // Get the inputs from the workflow file: https://github.com/actions/toolkit/tree/master/packages/core#inputsoutputs
+    const uploadUrl = core.getInput('upload_url', { required: true });
+    const assetPath = core.getInput('assets', { required: true });
+
+    const list = await getFileList(assetPath, uploadUrl);
+
+    if (list.length === 0) return;
+
+    const browserDownloadUrl = [];
+
+    for (let i = 0; i < list.length; i++) {
+      const uploadAssetResponse = await uploadAsset(list[i]);
 
       const url = (uploadAssetResponse && uploadAssetResponse.data && uploadAssetResponse.data.browser_download_url) || '';
       if (url) {
