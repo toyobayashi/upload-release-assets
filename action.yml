@@ -2,13 +2,36 @@ name: 'Upload Release Assets'
 description: 'Upload release assets to an existing release in your repository'
 author: 'toyobayashi'
 inputs:
-  upload_url:
-    description: 'The URL for uploading assets to the release'
+  tag_name:
+    description: 'The name of the tag. This should come from the webhook payload, `github.GITHUB_REF` when a user pushes a new tag'
     required: true
+  release_name:
+    description: 'The name of the release. For example, `Release v1.0.1`'
+    required: true
+  target_commitish:
+    description: 'Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually master).'
+    required: false
+  body:
+    description: 'Text describing the contents of the tag.'
+    required: false
+  draft:
+    description: '`true` to create a draft (unpublished) release, `false` to create a published one. Default: `false`'
+    required: false
+    default: false
+  prerelease:
+    description: '`true` to identify the release as a prerelease. `false` to identify the release as a full release. Default: `false`'
+    required: false
+    default: false
   assets:
     description: 'The paths to the asset you want to upload'
-    required: true
+    required: false
 outputs:
+  id:
+    description: 'The ID of the created Release'
+  html_url:
+    description: 'The URL users can navigate to in order to view the release'
+  upload_url:
+    description: 'The URL for uploading assets to the release'
   browser_download_urls:
     description: 'The URL users can navigate to in order to download the uploaded asset'
 runs:

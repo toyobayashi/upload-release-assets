@@ -14,9 +14,6 @@ export async function getReleaseInfo (options) {
     owner, repo
   });
 
-  console.log('releases:');
-  console.log(releases);
-
   try {
     const testrelease = await github.repos.getReleaseByTag({
       owner, repo, tag: '3575'
@@ -24,7 +21,7 @@ export async function getReleaseInfo (options) {
     console.log('testrelease:');
     console.log(testrelease);
   } catch (err) {
-    console('getReleaseByTag err');
+    console.log('getReleaseByTag err');
     console.log(err);
   }
 
@@ -41,19 +38,29 @@ export async function getReleaseInfo (options) {
   }
 
   const releaseName = options.release_name.replace('refs/tags/', '');
-  const body = options.body || '';
+  const body = options.body;
   const draft = (options.draft === true);
   const prerelease = (options.prerelease === true);
+  const target_commitish = options.target_commitish;
 
-  const createReleaseResponse = await github.repos.createRelease({
+  const createReleaseOptions = {
     owner,
     repo,
     tag_name: tag,
     name: releaseName,
-    body,
     draft,
     prerelease
-  });
+  };
+
+  if (body) {
+    createReleaseOptions.body = body;
+  }
+
+  if (target_commitish) {
+    createReleaseOptions.target_commitish = target_commitish;
+  }
+
+  const createReleaseResponse = await github.repos.createRelease(createReleaseOptions);
 
   return {
     id: createReleaseResponse.data.id,
