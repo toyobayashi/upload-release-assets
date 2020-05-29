@@ -105,7 +105,7 @@ export async function run() {
             exists[options.path] = 0;
           }
           exists[options.path]++;
-          options.name = `${options.name} (${exists[options.path]})`
+          options.name = `${path.parse(options.path).name}_${exists[options.path]}${path.extname(options.path)}`
           uploadAssetResponse = await uploadAsset(options);
         } else {
           throw err;
