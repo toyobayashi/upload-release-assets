@@ -1,10 +1,7 @@
 ``` yml
-name: Test
+name: Build
 
-on:
-  push:
-    tags:
-    - '*'
+on: [push, pull_request]
 
 jobs:
   build:
@@ -41,7 +38,7 @@ jobs:
         echo "darwin" > ./out/darwin.txt
     
     - name: Test upload
-      # if: ${{ startsWith(github.event.ref, 'refs/tags') }}
+      if: ${{ startsWith(github.event.ref, 'refs/tags') }}
       uses: toyobayashi/upload-release-assets@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -61,7 +61,6 @@ jobs:
         # upload_url: ${{ needs.draft.outputs.upload_url }}
         tag_name: ${{ github.event.after }}
         release_name: ${{ github.event.after }}
-        body: hello
         draft: true
         prerelease: false
-        # assets: ./out/*.txt; ./dist/main.js; ./not/exists
+        assets: ./out/*.txt; ./dist/main.js; ./not/exists
