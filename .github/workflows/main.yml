@@ -3,22 +3,22 @@ name: Test
 on: push
 
 jobs:
-  draft:
-    name: Draft
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-    - name: Create Release Draft
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.event.after }}
-        draft: true
-        prerelease: false
+  # draft:
+  #   name: Draft
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+  #   steps:
+  #   - name: Create Release Draft
+  #     id: create_release
+  #     uses: actions/create-release@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       tag_name: ${{ github.ref }}
+  #       release_name: ${{ github.event.after }}
+  #       draft: true
+  #       prerelease: false
 
   build:
     name: Build
@@ -61,5 +61,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.draft.outputs.upload_url }} 
+        # upload_url: ${{ needs.draft.outputs.upload_url }}
+        tag_name: ${{ github.event.after }}
+        release_name: ${{ github.event.after }}
+        draft: true
+        prerelease: false
         assets: ./out/*.txt; ./dist/main.js; ./not/exists
