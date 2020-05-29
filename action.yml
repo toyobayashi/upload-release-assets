@@ -9,7 +9,7 @@ inputs:
     description: 'The name of the release. For example, `Release v1.0.1`'
     required: true
   target_commitish:
-    description: 'Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually master).'
+    description: 'Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository''s default branch (usually master).'
     required: false
   body:
     description: 'Text describing the contents of the tag.'
