@@ -29,8 +29,8 @@ async function uploadAsset (options) {
   return uploadAssetResponse;
 }
 
-export async function upload (url, assets) {
-  const list = await getFileList(assets, url);
+export async function upload (releaseInfo, assets) {
+  const list = await getFileList(assets, releaseInfo.upload_url);
 
   if (list.length === 0) return [];
 

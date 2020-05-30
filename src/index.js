@@ -13,7 +13,7 @@ export async function run() {
       prerelease: core.getInput('prerelease', { required: false }) === 'true'
     });
 
-    const browserDownloadUrls = await upload(releaseInfo.upload_url, core.getInput('assets', { required: false }));
+    const browserDownloadUrls = await upload(releaseInfo, core.getInput('assets', { required: false }));
 
     const outputs = {
       id: releaseInfo.id,
