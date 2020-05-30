@@ -63,4 +63,7 @@ jobs:
         release_name: ${{ github.event.after }}
         draft: true
         prerelease: false
-        assets: ./out/*.txt; ./dist/main.js; ./not/exists
+        assets: |
+          ./not/exists
+          ./dist/main.js
+          ./out/*.txt

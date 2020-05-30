@@ -25,6 +25,9 @@ export async function run() {
     Object.keys(outputs).forEach(k => {
       core.setOutput(k, outputs[k]);
     });
+
+    console.log('outputs:');
+    console.log(JSON.stringify(outputs, null, 2));
   } catch (error) {
     core.setFailed(error.message);
   }

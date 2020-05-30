@@ -39,7 +39,7 @@ jobs:
     
     - name: Test upload
       if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-      uses: toyobayashi/upload-release-assets@master
+      uses: toyobayashi/upload-release-assets@v2.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -49,5 +49,8 @@ jobs:
         # body: ''
         draft: true
         prerelease: false
-        assets: ./out/*.txt; ./dist/main.js; ./not/exists
+        assets: |
+          ./out/*.txt
+          ./dist/main.js
+          ./not/exists
 ```
