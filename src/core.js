@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { GitHub, context } from '@actions/github';
 
+/** @type {GitHub} */
 let github;
 try {
   github = new GitHub(process.env['GITHUB_TOKEN']);

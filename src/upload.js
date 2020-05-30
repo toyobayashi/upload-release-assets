@@ -1,110 +1,110 @@
-// import { github } from './core.js';
+import { github } from './core.js';
 import * as path from 'path';
 import * as fs from 'fs';
 import { getFileList } from './util.js';
 
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 
-import * as requestError from '@octokit/request-error';
+// import * as requestError from '@octokit/request-error';
 
-/**
- * @param {{ url: string; name: string; headers: { 'Content-Type': string; 'Content-Length': string; [h: string]: string }; data: Buffer | NodeJS.ReadStream; label?: string }} options
- * @returns {Promise<any>}
- */
-function requestUploadReleaseAsset (options) {
-  let u = options.url.replace(/\{.+\}$/, `?name=${options.name}`);
-  if (typeof options.label === 'string' && options.label !== '') {
-    u += `&label=${options.label}`;
-  }
+// /**
+//  * @param {{ url: string; name: string; headers: { 'Content-Type': string; 'Content-Length': string; [h: string]: string }; data: Buffer | NodeJS.ReadStream; label?: string }} options
+//  * @returns {Promise<any>}
+//  */
+// function requestUploadReleaseAsset (options) {
+//   let u = options.url.replace(/\{.+\}$/, `?name=${options.name}`);
+//   if (typeof options.label === 'string' && options.label !== '') {
+//     u += `&label=${options.label}`;
+//   }
 
-  let headers = {};
-  let status;
-  let url;
-  const requestOptions = {
-    method: 'POST',
-    url: u,
-    body: options.data,
-    headers: {
-      ...(options.headers),
-      'authorization': `token ${process.env['GITHUB_TOKEN']}`,
-      'user-agent': 'GitHub Actions upload-release-assets',
-    }
-  };
-  return fetch(u, requestOptions).then(response => {
-    url = response.url;
-    status = response.status;
+//   let headers = {};
+//   let status;
+//   let url;
+//   const requestOptions = {
+//     method: 'POST',
+//     url: u,
+//     body: options.data,
+//     headers: {
+//       ...(options.headers),
+//       'authorization': `token ${process.env['GITHUB_TOKEN']}`,
+//       'user-agent': 'GitHub Actions upload-release-assets',
+//     }
+//   };
+//   return fetch(u, requestOptions).then(response => {
+//     url = response.url;
+//     status = response.status;
 
-    for (const keyAndValue of response.headers) {
-      headers[keyAndValue[0]] = keyAndValue[1];
-    }
+//     for (const keyAndValue of response.headers) {
+//       headers[keyAndValue[0]] = keyAndValue[1];
+//     }
 
-    if (status === 204 || status === 205) {
-      return;
-    } // GitHub API returns 200 for HEAD requests
+//     if (status === 204 || status === 205) {
+//       return;
+//     } // GitHub API returns 200 for HEAD requests
 
-    if (status === 304) {
-      throw new requestError.RequestError("Not modified", status, {
-        headers,
-        request: requestOptions
-      });
-    }
+//     if (status === 304) {
+//       throw new requestError.RequestError("Not modified", status, {
+//         headers,
+//         request: requestOptions
+//       });
+//     }
 
-    if (status >= 400) {
-      return response.text().then(message => {
-        const error = new requestError.RequestError(message, status, {
-          headers,
-          request: requestOptions
-        });
+//     if (status >= 400) {
+//       return response.text().then(message => {
+//         const error = new requestError.RequestError(message, status, {
+//           headers,
+//           request: requestOptions
+//         });
 
-        try {
-          let responseBody = JSON.parse(error.message);
-          Object.assign(error, responseBody);
-          let errors = responseBody.errors; // Assumption `errors` would always be in Array format
+//         try {
+//           let responseBody = JSON.parse(error.message);
+//           Object.assign(error, responseBody);
+//           let errors = responseBody.errors; // Assumption `errors` would always be in Array format
 
-          error.message = error.message + ": " + errors.map(JSON.stringify).join(", ");
-        } catch (e) {// ignore, see octokit/rest.js#684
-        }
+//           error.message = error.message + ": " + errors.map(JSON.stringify).join(", ");
+//         } catch (e) {// ignore, see octokit/rest.js#684
+//         }
 
-        throw error;
-      });
-    }
+//         throw error;
+//       });
+//     }
 
-    const contentType = response.headers.get("content-type");
+//     const contentType = response.headers.get("content-type");
 
-    if (/application\/json/.test(contentType)) {
-      return response.json();
-    }
+//     if (/application\/json/.test(contentType)) {
+//       return response.json();
+//     }
 
-    if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
-      return response.text();
-    }
+//     if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
+//       return response.text();
+//     }
 
-    return response.arrayBuffer();
-  }).then(data => {
-    return {
-      status,
-      url,
-      headers,
-      data
-    };
-  }).catch(error => {
-    if (error instanceof requestError.RequestError) {
-      throw error;
-    }
+//     return response.arrayBuffer();
+//   }).then(data => {
+//     return {
+//       status,
+//       url,
+//       headers,
+//       data
+//     };
+//   }).catch(error => {
+//     if (error instanceof requestError.RequestError) {
+//       throw error;
+//     }
 
-    throw new requestError.RequestError(error.message, 500, {
-      headers,
-      request: requestOptions
-    });
-  });
-}
+//     throw new requestError.RequestError(error.message, 500, {
+//       headers,
+//       request: requestOptions
+//     });
+//   });
+// }
 
 const exists = Object.create(null);
 
 async function uploadAsset (options) {
   let uploadAssetResponse;
   try {
-    uploadAssetResponse = await requestUploadReleaseAsset({
+    uploadAssetResponse = await github.repos.uploadReleaseAsset({
       data: options.data,
       headers: options.headers,
       name: options.name,
