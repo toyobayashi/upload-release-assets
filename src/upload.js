@@ -1,4 +1,4 @@
-import { github } from './core.js';
+import { github, core } from './core.js';
 import * as path from 'path';
 import { getFileList } from './util.js';
 
@@ -20,6 +20,7 @@ async function uploadAsset (options) {
       }
       exists[options.path]++;
       options.name = `${path.parse(options.path).name}_${exists[options.path]}${path.extname(options.path)}`
+      console.log(`rename: ${options.name}`);
       uploadAssetResponse = await uploadAsset(options);
     } else {
       throw err;
@@ -38,6 +39,7 @@ export async function upload (releaseInfo, assets) {
 
   for (let i = 0; i < list.length; i++) {
     const uploadAssetResponse = await uploadAsset(list[i]);
+    console.log(`uploaded: ${uploadAssetResponse.data.browser_download_url}`);
 
     const url = (uploadAssetResponse && uploadAssetResponse.data && uploadAssetResponse.data.browser_download_url) || '';
     if (url) {
