@@ -24,8 +24,8 @@ function requestUploadReleaseAsset (options) {
     body: options.data,
     headers: {
       ...(options.headers),
-      'Authorization': `token ${process.env['GITHUB_TOKEN']}`,
-      'User-Agent': 'GitHub Actions upload-release-assets',
+      'authorization': `token ${process.env['GITHUB_TOKEN']}`,
+      'user-agent': 'GitHub Actions upload-release-assets',
     }
   };
   return fetch(u, requestOptions).then(response => {
