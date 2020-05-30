@@ -1,5 +1,6 @@
 // import { github } from './core.js';
 import * as path from 'path';
+import * as fs from 'fs';
 import { getFileList } from './util.js';
 
 import fetch from 'node-fetch';
@@ -121,6 +122,10 @@ async function uploadAsset (options) {
       exists[options.path]++;
       options.name = `${path.parse(options.path).name}_${exists[options.path]}${path.extname(options.path)}`
       console.log(`rename: ${options.name}`);
+      try {
+        options.data.destroy();
+      } catch (_) {}
+      options.data = fs.createReadStream(options.path, { autoClose: true, emitClose: true });
       uploadAssetResponse = await uploadAsset(options);
     } else {
       console.log(err);
