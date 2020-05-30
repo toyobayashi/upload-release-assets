@@ -14,7 +14,11 @@ async function uploadAsset (options) {
       url: options.url
     });
   } catch (err) {
-    if (err.errors.length === 1 && err.errors[0].resource === 'ReleaseAsset' && err.errors[0].code === 'already_exists' && err.errors[0].field === 'name') {
+    if (Array.isArray(err.errors) && err.errors.length === 1
+        && err.errors[0].resource === 'ReleaseAsset'
+        && err.errors[0].code === 'already_exists'
+        && err.errors[0].field === 'name'
+    ) {
       if (exists[options.path] === undefined) {
         exists[options.path] = 0;
       }
@@ -23,6 +27,7 @@ async function uploadAsset (options) {
       console.log(`rename: ${options.name}`);
       uploadAssetResponse = await uploadAsset(options);
     } else {
+      console.log(err);
       throw err;
     }
   }
