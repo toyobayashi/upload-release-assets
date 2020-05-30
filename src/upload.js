@@ -21,6 +21,7 @@ function requestUploadReleaseAsset (options) {
   let url;
   const requestOptions = {
     method: 'POST',
+    url: u,
     body: options.data,
     headers: {
       ...(options.headers),
