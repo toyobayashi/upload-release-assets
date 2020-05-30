@@ -20,8 +20,10 @@
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^2.2.0",
+    "@octokit/request-error": "^2.0.1",
     "glob": "^7.1.6",
-    "mime": "^2.4.6"
+    "mime": "^2.4.6",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "@tybys/ty": "^0.9.3"

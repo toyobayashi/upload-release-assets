@@ -35,7 +35,7 @@ export async function getFileList (assets, url) {
     const assetContentType = getType(path.extname(p)) || 'application/octet-stream';
     const assetContentLength = fs.statSync(p).size;
 
-    const headers = { 'content-type': assetContentType, 'content-length': assetContentLength };
+    const headers = { 'Content-Type': assetContentType, 'Content-Length': assetContentLength };
     const assetName = path.basename(p);
     const data = fs.readFileSync(p);
     // const data = fs.createReadStream(p, { autoClose: true, emitClose: true });
