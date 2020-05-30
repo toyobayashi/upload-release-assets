@@ -13,7 +13,7 @@ export async function getFileList (assets, url) {
 
   const cwd = /* process.env['GITHUB_WORKSPACE'] ||  */process.cwd();
 
-  const pathList = assets.split(';').map(s => s.trim());
+  const pathList = str2arr(assets);
 
   let fileList = [];
   for (let i = 0; i < pathList.length; i++) {
@@ -37,8 +37,8 @@ export async function getFileList (assets, url) {
 
     const headers = { 'content-type': assetContentType, 'content-length': assetContentLength };
     const assetName = path.basename(p);
-    const data = fs.readFileSync(p);
-    // const data = fs.createReadStream(p, { autoClose: true, emitClose: true });
+    // const data = fs.readFileSync(p);
+    const data = fs.createReadStream(p, { autoClose: true, emitClose: true });
 
     return {
       data,
@@ -80,4 +80,14 @@ function isGlob (str) {
   }
 
   return false;
+}
+
+/**
+ * @param {string} str
+ * @returns {string[]}
+ */
+function str2arr (str) {
+  const arr = str.split(';').map(s => s.trim().split(/\r?\n/).map(ss => ss.trim()));
+  const flatarr = arr.reduce((acc, val) => acc.concat(val), []);
+  return flatarr.filter(s => (s !== ''));
 }
