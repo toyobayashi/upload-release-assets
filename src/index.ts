@@ -27,8 +27,9 @@ export async function run (): Promise<void> {
     for (const k in outputs) {
       if (Object.prototype.hasOwnProperty.call(outputs, k)) {
         const key = k as keyof typeof outputs
-        core.setOutput(key, outputs[key])
-        realoutputs[key] = JSON.stringify(outputs[key])
+        const value = outputs[key]
+        core.setOutput(key, value)
+        realoutputs[key] = typeof value === 'string' ? value : JSON.stringify(value)
       }
     }
 
