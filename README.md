@@ -55,7 +55,7 @@ jobs:
     
     - name: Create release
       if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-      uses: toyobayashi/upload-release-assets@v2.1.0
+      uses: toyobayashi/upload-release-assets@v3.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

@@ -1,6 +1,6 @@
 {
   "name": "@tybys/upload-release-assets",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "private": true,
   "description": "Upload release assets to an existing GitHub Release",
   "main": "dist/main.js",
@@ -24,6 +24,18 @@
     "mime": "^2.4.6"
   },
   "devDependencies": {
-    "@tybys/ty": "^0.9.3"
+    "@tybys/ty": "^0.9.3",
+    "@types/mime": "^2.0.2",
+    "@types/node": "^12.12.36",
+    "@typescript-eslint/eslint-plugin": "^3.0.2",
+    "@typescript-eslint/parser": "^3.0.2",
+    "eslint": "^7.1.0",
+    "eslint-config-standard-with-typescript": "^18.0.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.3"
   }
 }
